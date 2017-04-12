@@ -83,6 +83,7 @@ from . import controls
 from . import findbestmatch
 from . import findwindows
 from . import handleprops
+from . import mouse
 from .backend import registry
 
 from .actionlogger import ActionLogger
@@ -130,7 +131,7 @@ class WindowSpecification(object):
     .. automethod:: __getitem__
     """
 
-    WAIT_CRITERIA_MAP = {'exists': ('exists',),
+    WAIT_CRITERIA_MAP = {'exists': ('Exists',),
                          'visible': ('is_visible',),
                          'enabled': ('is_enabled',),
                          'ready': ('is_visible', 'is_enabled',),
@@ -552,6 +553,14 @@ class WindowSpecification(object):
             control_name_map.setdefault(ctrl, []).append(name)
 
         return control_name_map
+
+    # provid mouse click function for non-button object
+    def mouse_click_center(self, button="left"):
+        this_ctrl = self.__resolve_control(self.criteria)[-1]
+        place = this_ctrl.rectangle().mid_point()
+        
+        # text = this_ctrl.window_text()
+        mouse.click(button, (place.x, place.y))
 
     def print_control_identifiers(self, depth=None):
         """
